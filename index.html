@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#800020" />
+  <meta name="color-scheme" content="light" />
+  <title>ERA.RUN – Elkonin Running Addicts</title>
+  <meta name="description" content="ERA.RUN – клуб любителей бега. Тренер Александр Элконин. Онлайн-ведение, очные тренировки в Хайфе, беговые сборы. Подкаст ‘Когда твой тренер – доктор’." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #f5f6f7;
+      --primary: #800020; /* бордовый */
+      --accent: #ff7a00;  /* оранжевый */
+      --border: #e6e7e9;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    /* === Top Nav === */
+    .nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(255,255,255,.9);
+      backdrop-filter: saturate(180%) blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav__inner { max-width: 1200px; margin: 0 auto; padding: .75rem 1rem; display: flex; align-items: center; gap: 1rem; }
+    .brand { font-weight: 800; letter-spacing: .2px; }
+    .brand .ru { display: inline; }
+    .brand .en { display: none; }
+
+    .nav__spacer { flex: 1 1 auto; }
+
+    .nav__links { display: flex; gap: .75rem; align-items: center; }
+    .nav__links a {
+      text-decoration: none; color: var(--text); font-weight: 600; padding: .5rem .75rem; border-radius: 999px; transition: transform .2s ease, background-color .2s ease;
+    }
+    .nav__links a:hover { background: var(--muted); transform: translateY(-1px); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .8rem 1.1rem; border-radius: 999px; border: none; font-weight: 700; cursor: pointer; box-shadow: var(--shadow); transition: transform .15s ease, filter .15s ease; text-decoration: none; }
+    .btn--primary { background: var(--primary); color: #fff; }
+    .btn--primary:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    /* Language switch */
+    .lang { display: inline-flex; gap: .25rem; align-items: center; border: 1px solid var(--border); padding: .35rem; border-radius: 999px; background: #fff; }
+    .lang button { background: none; border: none; padding: .35rem .6rem; border-radius: 999px; cursor: pointer; font-weight: 600; }
+    .lang button[aria-pressed="true"] { background: var(--primary); color: #fff; }
+
+    /* Mobile nav */
+    .nav__burger { display: none; border: 1px solid var(--border); border-radius: 10px; padding: .4rem .55rem; background: #fff; cursor: pointer; }
+
+    @media (max-width: 900px) {
+      .nav__links { display: none; position: fixed; left: 0; right: 0; top: 60px; background: #fff; border-bottom: 1px solid var(--border); padding: .75rem; flex-direction: column; align-items: stretch; }
+      .nav__links.open { display: flex; }
+      .nav__burger { display: inline-flex; }
+      .nav__inner { padding: .6rem .9rem; }
+    }
+
+    /* === Sections === */
+    section { position: relative; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: clamp(48px, 6vw, 96px) 1rem; }
+    .section-title { font-size: clamp(1.6rem, 1.1rem + 2vw, 2.4rem); margin: 0 0 .5rem; font-weight: 800; }
+    .section-sub { margin: 0 0 1.2rem; color: #333; }
+
+    .bg-cover {
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      color: #0b0b0b;
+    }
+    .overlay {
+      position: relative;
+    }
+    .overlay::before {
+      content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.88)); pointer-events: none;
+    }
+    .overlay > * { position: relative; z-index: 1; }
+
+    /* === Hero === */
+    .hero { min-height: 86vh; display: grid; place-items: center; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 1.4rem + 4vw, 4rem); line-height: 1.1; margin: 0 0 .75rem; font-weight: 800; }
+    .hero p { font-size: clamp(1rem, .95rem + .6vw, 1.25rem); margin: 0 0 1.25rem; color: #222; }
+    .hero .cta { display: inline-flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+
+    /* === Cards / grid === */
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(12, 1fr); }
+    .col-12 { grid-column: span 12; }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    @media (max-width: 900px) {
+      .col-6, .col-4 { grid-column: span 12; }
+    }
+
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 1.1rem; box-shadow: var(--shadow); transition: transform .2s ease, box-shadow .2s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(0,0,0,.12); }
+    .tag { display: inline-block; font-size: .75rem; font-weight: 700; color: #fff; background: var(--accent); padding: .25rem .5rem; border-radius: 6px; }
+
+    .icon { width: 22px; height: 22px; display: inline-block; }
+
+    .list { padding-left: 1.1rem; }
+
+    /* === Podcast video === */
+    .video { aspect-ratio: 16 / 9; width: 100%; border: none; border-radius: 16px; box-shadow: var(--shadow); }
+
+    /* === Contact === */
+    .contact { background: var(--muted); }
+    .contact .form { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
+    .contact label { font-weight: 600; }
+    .contact input, .contact textarea {
+      width: 100%; padding: .8rem; border: 1px solid var(--border); border-radius: 12px; font: inherit; background: #fff;
+    }
+    .contact textarea { min-height: 140px; resize: vertical; }
+    .contact .form-row { grid-column: span 1; }
+    .contact .form-row.full { grid-column: span 2; }
+    @media (max-width: 700px) {
+      .contact .form { grid-template-columns: 1fr; }
+      .contact .form-row.full, .contact .form-row { grid-column: span 1; }
+    }
+
+    /* === Footer === */
+    footer { border-top: 1px solid var(--border); background: #fff; }
+    .footer__inner { max-width: 1200px; margin: 0 auto; padding: 1rem; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; justify-content: space-between; }
+    .credits { font-size: .9rem; color: #444; }
+
+    /* === Reveal on scroll === */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* === I18N === */
+    /* Default: Russian visible */
+    .en { display: none !important; }
+    body.en .en { display: initial !important; }
+    body.en .ru { display: none !important; }
+
+    /* === Background images (Unsplash) === */
+    /* Источник: Unsplash. При необходимости замените на свои изображения. */
+    .bg-hero { background-image:
+      linear-gradient(180deg, rgba(255,255,255,.50), rgba(255,255,255,.92)),
+      url("https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1920&auto=format&fit=crop"); }
+    .bg-about { background-image:
+      linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.92)),
+      url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1920&auto=format&fit=crop"); }
+    .bg-offers { background-image:
+      linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.92)),
+      url("https://images.unsplash.com/photo-1507235916993-5c9cd3ac7e0c?q=80&w=1920&auto=format&fit=crop"); }
+    .bg-podcast { background-image:
+      linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.92)),
+      url("https://images.unsplash.com/photo-1571008887538-b36bb32fcb88?q=80&w=1920&auto=format&fit=crop"); }
+    .bg-contact { background-image:
+      linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.92)),
+      url("https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1920&auto=format&fit=crop"); }
+
+    /* === Utility === */
+    .muted { color: #444; }
+    .accent { color: var(--accent); }
+    .lead { font-size: clamp(1rem, .95rem + .6vw, 1.25rem); }
+    .spacer { height: 16px; }
+  </style>
+</head>
+<body class="ru">
+  <header class="nav" id="top">
+    <div class="nav__inner">
+      <div class="brand">
+        <span class="ru">ERA.RUN — Elkonin Running Addicts</span>
+        <span class="en">ERA.RUN — Elkonin Running Addicts</span>
+      </div>
+      <div class="nav__spacer"></div>
+      <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger">☰</button>
+      <nav class="nav__links" id="navLinks">
+        <a href="#hero"><span class="ru">Главная</span><span class="en">Home</span></a>
+        <a href="#about"><span class="ru">О компании</span><span class="en">About</span></a>
+        <a href="#offers"><span class="ru">Мы предлагаем</span><span class="en">Services</span></a>
+        <a href="#podcast"><span class="ru">Подкаст</span><span class="en">Podcast</span></a>
+        <a href="#contact"><span class="ru">Контакты</span><span class="en">Contact</span></a>
+        <a href="#contact" class="btn btn--primary"><span class="ru">Записаться</span><span class="en">Join now</span></a>
+        <div class="lang" role="group" aria-label="Language switch">
+          <button type="button" id="langRu" aria-pressed="true">RU</button>
+          <button type="button" id="langEn" aria-pressed="false">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero" class="bg-cover bg-hero overlay hero">
+    <div class="wrap reveal in">
+      <h1>
+        <span class="ru">Беги умнее. Тренируйся с доктором.</span>
+        <span class="en">Run smarter. Train with a doctor.</span>
+      </h1>
+      <p class="lead">
+        <span class="ru">ERA.RUN — клуб, где наука встречается с практикой бега. Тренер Александр Элконин и команда единомышленников.</span>
+        <span class="en">ERA.RUN is where science meets running practice, led by coach Alexander Elkonin.</span>
+      </p>
+      <div class="cta">
+        <a href="#offers" class="btn btn--primary">
+          <span class="ru">Выбрать формат тренировок</span>
+          <span class="en">Choose your program</span>
+        </a>
+        <a href="#podcast" class="btn" style="border:1px solid var(--border)">
+          <span class="ru">Слушать подкаст</span>
+          <span class="en">Listen to podcast</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="bg-cover bg-about overlay">
+    <div class="wrap reveal">
+      <h2 class="section-title">
+        <span class="ru">О клубе и тренере</span>
+        <span class="en">About the club & coach</span>
+      </h2>
+      <p class="section-sub">
+        <span class="ru">Тренер <strong>Александр Элконин</strong> — специалист по бегу и подготовке к шоссе и трейлам. Участники ERA.RUN бегают городские марафоны и горные старты в Израиле и за рубежом.</span>
+        <span class="en"><strong>Alexander Elkonin</strong> is a running coach preparing athletes for road and trail races. ERA.RUN members compete in Israel and internationally.</span>
+      </p>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3 class="ru">Наш подход</h3>
+            <h3 class="en">Our approach</h3>
+            <p class="ru">Индивидуальные планы, контроль нагрузки, техника бега, профилактика травм. Научная база + практический опыт клуба.</p>
+            <p class="en">Personalized plans, load management, running form, and injury prevention — science-based and field-tested.</p>
+            <ul class="list">
+              <li><span class="ru">Тесты и оценка текущей формы</span><span class="en">Assessments & fitness tests</span></li>
+              <li><span class="ru">Гибкие планы под график</span><span class="en">Flexible plans for your schedule</span></li>
+              <li><span class="ru">Поддержка в мессенджерах</span><span class="en">Direct coach support</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <h3 class="ru">Отзывы</h3>
+            <h3 class="en">Testimonials</h3>
+            <p class="muted ru">Добавьте реальные отзывы ваших спортсменов. Пример:</p>
+            <p class="muted en">Add real athlete testimonials. Example:</p>
+            <blockquote class="muted" style="margin:0;">
+              <span class="ru">“Грамотный подход и бережная нагрузка — результат пришёл быстрее, чем ожидала.” — <em>участница ERA.RUN</em></span>
+              <span class="en">“Smart programming and careful load control — results came faster than I expected.” — <em>ERA.RUN athlete</em></span>
+            </blockquote>
+            <!-- TODO: Замените пример на реальные отзывы -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFERS / SERVICES -->
+  <section id="offers" class="bg-cover bg-offers overlay">
+    <div class="wrap reveal">
+      <h2 class="section-title">
+        <span class="ru">Мы предлагаем</span>
+        <span class="en">What we offer</span>
+      </h2>
+      <p class="section-sub">
+        <span class="ru">Выберите удобный формат — онлайн из любой страны, очно в Хайфе, либо присоединяйтесь к беговым сборам.</span>
+        <span class="en">Choose the format that fits you — online worldwide, in-person in Haifa, or join our training camps.</span>
+      </p>
+
+      <div class="grid">
+        <div class="col-4">
+          <div class="card">
+            <span class="tag">ONLINE</span>
+            <h3 class="ru">Удалённое ведение</h3>
+            <h3 class="en">Remote coaching</h3>
+            <p class="ru">Персональные планы, еженедельные корректировки, разбор тренировок. Связь через популярные приложения и мессенджеры.</p>
+            <p class="en">Personal plans with weekly adjustments and workout reviews. Communication through popular apps and messengers.</p>
+            <a href="#contact" class="btn btn--primary"><span class="ru">Оставить заявку</span><span class="en">Get started</span></a>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <span class="tag">HAIFA</span>
+            <h3 class="ru">Очные тренировки</h3>
+            <h3 class="en">In‑person (Haifa)</h3>
+            <p class="ru">Групповые и индивидуальные занятия с тренером в Хайфе: техника бега, интервалы, горки, силовая подготовка бегуна.</p>
+            <p class="en">Group and one‑to‑one sessions in Haifa: form drills, intervals, hills, and runner‑specific strength.</p>
+            <a href="#contact" class="btn btn--primary"><span class="ru">Записаться</span><span class="en">Book a session</span></a>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <span class="tag">CAMPS</span>
+            <h3 class="ru">Беговые сборы</h3>
+            <h3 class="en">Training camps</h3>
+            <p class="ru">Сборы в разных странах: объёмы, трейлы, лекции по питанию и восстановлению. Подходит для разных уровней.</p>
+            <p class="en">Camps abroad: volume weeks, trails, nutrition & recovery sessions. Suitable for mixed levels.</p>
+            <a href="#contact" class="btn btn--primary"><span class="ru">Узнать расписание</span><span class="en">See schedule</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PODCAST -->
+  <section id="podcast" class="bg-cover bg-podcast overlay">
+    <div class="wrap reveal">
+      <h2 class="section-title">
+        <span class="ru">Подкаст о беге</span>
+        <span class="en">Running podcast</span>
+      </h2>
+      <p class="section-sub">
+        <span class="ru">Тренер Александр Элконин отвечает на вопросы о беге в подкасте <strong>«Когда твой тренер – доктор»</strong>. Слушайте и подписывайтесь: <a href="https://www.youtube.com/@ERA_RUN" target="_blank" rel="noopener">youtube.com/@ERA_RUN</a>.</span>
+        <span class="en">Coach Alexander Elkonin answers running questions in the podcast <strong>“When your coach is a doctor”</strong>. Subscribe here: <a href="https://www.youtube.com/@ERA_RUN" target="_blank" rel="noopener">youtube.com/@ERA_RUN</a>.</span>
+      </p>
+      <div class="grid">
+        <div class="col-12">
+          <iframe class="video" src="https://www.youtube.com/embed/kBMLAPdsCg0" title="ERA.RUN Podcast" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section id="contact" class="bg-cover bg-contact overlay contact">
+    <div class="wrap reveal">
+      <h2 class="section-title">
+        <span class="ru">Контакты</span>
+        <span class="en">Contacts</span>
+      </h2>
+
+      <div class="grid" style="align-items:start;">
+        <div class="col-6">
+          <div class="card">
+            <h3 class="ru">Местоположение</h3>
+            <h3 class="en">Location</h3>
+            <p>
+              <span class="ru"><strong>Хайфа, Израиль</strong> — очные тренировки по договорённости.</span>
+              <span class="en"><strong>Haifa, Israel</strong> — in‑person sessions by appointment.</span>
+            </p>
+            <p>
+              <span class="ru">Часы работы: <em>по предварительной записи</em>. <!-- TODO: при необходимости укажите точные часы --></span>
+              <span class="en">Hours: <em>by appointment</em>. <!-- TODO: add exact hours if needed --></span>
+            </p>
+            <p>
+              <a class="btn" style="border:1px solid var(--border)" href="https://maps.app.goo.gl/6bqH6m7iKxC2aQhD7" target="_blank" rel="noopener">
+                <span class="ru">Открыть Хайфу на карте</span>
+                <span class="en">Open Haifa on the map</span>
+              </a>
+            </p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <h3 class="ru">Напишите нам</h3>
+            <h3 class="en">Send a message</h3>
+            <form class="form" onsubmit="event.preventDefault(); alert(document.body.classList.contains('en') ? 'Thanks! We\'ll get back to you.' : 'Спасибо! Мы свяжемся с вами.'); this.reset();">
+              <div class="form-row">
+                <label class="ru" for="name">Имя</label>
+                <label class="en" for="name">Name</label>
+                <input id="name" name="name" required placeholder="Alex" />
+              </div>
+              <div class="form-row">
+                <label class="ru" for="email">Email</label>
+                <label class="en" for="email">Email</label>
+                <input id="email" name="email" type="email" required placeholder="you@example.com" />
+              </div>
+              <div class="form-row full">
+                <label class="ru" for="msg">Сообщение</label>
+                <label class="en" for="msg">Message</label>
+                <textarea id="msg" name="msg" placeholder=""></textarea>
+              </div>
+              <div class="form-row full">
+                <button class="btn btn--primary" type="submit">
+                  <span class="ru">Отправить</span>
+                  <span class="en">Send</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer__inner">
+      <div class="credits">
+        <span class="ru">© <span id="y"></span> ERA.RUN — Elkonin Running Addicts</span>
+        <span class="en">© <span id="y2"></span> ERA.RUN — Elkonin Running Addicts</span>
+      </div>
+      <div class="credits">
+        <span class="ru">Фоновые фото: Unsplash. Видео: YouTube.</span>
+        <span class="en">Background photos: Unsplash. Video: YouTube.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Year
+    const y = new Date().getFullYear();
+    document.getElementById('y').textContent = y;
+    document.getElementById('y2').textContent = y;
+
+    // Mobile burger
+    const burger = document.getElementById('burger');
+    const links = document.getElementById('navLinks');
+    burger.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      burger.setAttribute('aria-expanded', String(open));
+    });
+    // Close menu on link click (mobile)
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      links.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Language toggle
+    const btnRu = document.getElementById('langRu');
+    const btnEn = document.getElementById('langEn');
+    function setLang(lang) {
+      document.body.classList.toggle('en', lang === 'en');
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'ru');
+      btnRu.setAttribute('aria-pressed', String(lang !== 'en'));
+      btnEn.setAttribute('aria-pressed', String(lang === 'en'));
+    }
+    btnRu.addEventListener('click', () => setLang('ru'));
+    btnEn.addEventListener('click', () => setLang('en'));
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: .15 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
